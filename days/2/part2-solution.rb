@@ -1,28 +1,33 @@
 ################################################################################
 #
 #  Author:  Joe Cohen
-#  Mood:    Jolly
-#  Problem: https://adventofcode.com/2022/day/1#part2
+#  Mood:    Frosty
+#  Problem: https://adventofcode.com/2022/day/2#part2
 #  Status:  Solved
 #
 ################################################################################
 
-group_total = 0
-largest_totals = [0, 0, 0]
-
+running_total = 0
+scores = { 'A' => 1, 'B' => 2, 'C' => 3 }
 file = File.open(__dir__ + '/input.txt', 'r')
 # file = File.open(__dir__ + '/test-input-1.txt', 'r')
 
-while !file.eof?
-  line = file.readline
-
-  if line.strip.empty?
-    group_total = 0
-  else
-    group_total += line.to_i
+def calc_match_score(a, b)  
+  if (b == 'Y')  # draw
+    a + 3
+  elsif (b == 'Z')  # win
+    a == 3 ? 7 : a + 7
+  else  # loss
+    a == 1 ? 3 : a - 1
   end
-  
-  largest_totals = (largest_totals + [group_total]).sort.reverse[0..2]
 end
 
-print largest_totals.sum
+while !file.eof?
+  line = file.readline
+  plays = line.split(' ')
+  player_1 = scores[plays[0]]
+  player_2 = plays[1]
+  running_total += calc_match_score(player_1, player_2)
+end
+
+puts running_total
